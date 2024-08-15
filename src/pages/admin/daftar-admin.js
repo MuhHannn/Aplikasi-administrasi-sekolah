@@ -7,7 +7,7 @@ import { FaTrashCan } from "react-icons/fa6";
 import { FiAlignJustify } from "react-icons/fi";
 
 import Navbar from "../components/navbar";
-import SearchBar from "../components/searchBar";
+import SearchBar from "../components/SearchBar";
 
 function Home() {
   const router = useRouter();

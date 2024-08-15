@@ -43,7 +43,6 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import nookies from 'nookies'
 import { useRouter } from 'next/router';
-import { useData } from './context';
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
 
 function LoginPage ()  {

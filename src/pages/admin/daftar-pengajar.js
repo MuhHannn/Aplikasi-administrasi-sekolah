@@ -3,7 +3,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Navbar from "../components/navbar";
-import SearchBar from "../components/searchBar";
+import SearchBar from "../components/SearchBar";
 
 function Home() {
   const router = useRouter();
