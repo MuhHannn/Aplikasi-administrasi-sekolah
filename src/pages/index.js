@@ -50,7 +50,6 @@ function LoginPage ()  {
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [message, setMessage] = useState('');
-    const { setData } = useData()
     const router = useRouter();
 
     const handleSubmit = async (event) => {
