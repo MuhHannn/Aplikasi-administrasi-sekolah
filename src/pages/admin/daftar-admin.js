@@ -9,7 +9,7 @@ import { FiAlignJustify } from "react-icons/fi";
 import Navbar from "../components/navbar";
 import SearchBar from "../components/SearchBar";
 
-function Home() {
+function DaftarAdmin() {
   const router = useRouter();
 
   const [showAllData, setShowAllData] = useState([]);
@@ -243,4 +243,4 @@ function Home() {
   );
 }
 
-export default daftarAdmin
+export default DaftarAdmin
