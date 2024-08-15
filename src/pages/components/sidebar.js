@@ -2,7 +2,7 @@ import React from 'react';
 import { Accordion, Image } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import { FaHome, FaClock, FaPen } from 'react-icons/fa'; // Import icons
-import CustomToggle from './CustomToggle'; // Pastikan path yang benar
+import CustomToggle from './customToggle'; // Pastikan path yang benar
 
 const Sidebar = () => {
   // const router = useRouter();

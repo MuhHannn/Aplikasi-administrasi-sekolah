@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from '../components/navbar';
 import Sidebar from '../components/sidebar';
 
-export default function AdminPage() {
+function AdminPage() {
     return (
         <div className="bg-gray-100 flex flex-col min-h-screen">
             <Navbar />
@@ -16,3 +16,5 @@ export default function AdminPage() {
         </div>
     );
 }
+
+export default AdminPage

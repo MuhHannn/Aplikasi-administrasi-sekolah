@@ -7,9 +7,9 @@ import { FaTrashCan } from "react-icons/fa6";
 import { FiAlignJustify } from "react-icons/fi";
 
 import Navbar from "../components/navbar";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../components/searchBar";
 
-export default function Home() {
+function Home() {
   const router = useRouter();
 
   const [showAllData, setShowAllData] = useState([]);
@@ -242,3 +242,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default daftarAdmin

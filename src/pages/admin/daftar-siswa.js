@@ -2,8 +2,9 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from '../components/navbar';
 import Sidebar from '../components/sidebar';
+import Home from './daftar-mapel';
 
-export default function daftarSiswa() {
+function daftarSiswa() {
     return (
         <div className="bg-gray-100 flex flex-col min-h-screen">
             <Navbar />
@@ -16,3 +17,5 @@ export default function daftarSiswa() {
         </div>
     );
 }
+
+export default Home

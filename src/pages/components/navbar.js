@@ -8,7 +8,7 @@ import { IoMdMenu, IoMdSettings } from "react-icons/io";
 import { MdAccountCircle } from "react-icons/md";
 import { FaHome, FaClock, FaPen, FaLongArrowAltRight } from 'react-icons/fa';
 
-import CustomToggle from './CustomToggle';
+import CustomToggle from './customToggle';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 

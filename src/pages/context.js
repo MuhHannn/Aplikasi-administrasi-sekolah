@@ -4,7 +4,7 @@ import { createContext, useState, useContext } from 'react';
 const DataContext = createContext();
 
 // Membuat provider untuk membungkus aplikasi dan menyediakan state global
-export const DataProvider = ({ children }) => {
+const DataProvider = ({ children }) => {
   const [data, setData] = useState(null);
 
   return (

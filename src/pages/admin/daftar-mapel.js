@@ -3,9 +3,9 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Navbar from "../components/navbar";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../components/searchBar";
 
-export default function Home() {
+function Home() {
   const router = useRouter();
   const [dataDetail, setDetail] = useState(null);
   const [showAllData, setShowAllData] = useState([]);
@@ -170,3 +170,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default Home

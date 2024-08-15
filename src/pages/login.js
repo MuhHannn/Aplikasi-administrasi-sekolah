@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import { useData } from './context';
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
 
-export default function LoginPage ()  {
+function LoginPage ()  {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
@@ -136,3 +136,5 @@ export default function LoginPage ()  {
         </div>
     );
 }
+
+export default LoginPage
