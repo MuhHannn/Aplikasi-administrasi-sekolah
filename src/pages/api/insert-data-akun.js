@@ -3,9 +3,9 @@ import bcrypt from 'bcrypt';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { username, status, password } = req.body;
+    const { username,nama,  status, password } = req.body;
 
-    if (!username || !status || !password) {
+    if (!username || !nama || !status || !password) {
       return res.status(400).json({ message: 'Semua data harus diisi' });
     }
 
@@ -17,11 +17,12 @@ export default async function handler(req, res) {
     try {
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
+      const shortenedHash = hashedPassword.substring(0, 12);  
 
       // Insert data ke database
       const result = await sql`
-        INSERT INTO akun_al_barokah (username, password, status)
-        VALUES (${username}, ${hashedPassword}, ${status})
+        INSERT INTO akun_al_barokah (username, nama, password, status)
+        VALUES (${username}, ${nama}, ${shortenedHash}, ${status})
         RETURNING *;
       `;
 

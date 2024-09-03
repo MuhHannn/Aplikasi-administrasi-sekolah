@@ -2,21 +2,20 @@ import { sql } from "@vercel/postgres";
 
 export default async function handler(req, res) {
   // cek method
-  if (req.method !== "PUT") {
+  if (req.method !== "DELETE") {
     return res.status(405).json({ error: "method not allowed" });
   }
 
   // cek data
-  let { id, nama, nis, kelamin } = await req.body;
+  let { id } = await req.body;
 
   if (!id) {
     return res.status(400).json({ error: "id harus ada" });
   }
 
-  // ubah data
-  const resData =
-    await sql`update siswa_al_barokah set nama=${nama}, nis=${nis}, kelamin=${kelamin} where id=${id} `;
+  // delete data
+  const resData = await sql`delete from pengajar_al_barokah where id=${id}`;
 
   // beritahu klo success
-  return res.status(200).json({ message: "updated", data: resData });
+  return res.status(200).json({ message: "deleted", data: resData });
 }

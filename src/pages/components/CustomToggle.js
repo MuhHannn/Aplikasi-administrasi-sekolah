@@ -20,7 +20,7 @@ function CustomToggle({ children, eventKey, isActive }) {
       onClick={decoratedOnClick}
       className={`flex justify-between items-center cursor-pointer py-2 px-3 border-l-2 ${
         isActive ? 'text-white border-blue-500' : 'border-transparent'
-      } hover:text-white ${active ? 'text-white ' : 'border-transparent'}`}
+      } hover:text-white ${active ? 'text-white borde' : 'border-transparent'}`}
     >
       <div className='flex gap-2 items-center'>
         <GrDatabase className='w-4 h-4' />

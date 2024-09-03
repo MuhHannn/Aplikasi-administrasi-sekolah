@@ -1,8 +1,7 @@
-// components/SearchBar.js
-
 import { useState } from "react";
+import { FaSearch } from "react-icons/fa";
 
-function SearchBar({ data, onSearch }) {
+function SearchBar({ children, data, onSearch }) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (e) => {
@@ -18,16 +17,17 @@ function SearchBar({ data, onSearch }) {
   };
 
   return (
-    <div className="flex mb-4">
+    <div className="flex">
       <input
         type="text"
-        className="p-2 border rounded w-full"
-        placeholder="Search by username"
+        className="py-2 px-3 border rounded-full w-full"
+        placeholder={children}
         value={searchQuery}
         onChange={handleSearch}
       />
+      <FaSearch className="absolute right-[415px] top-[138px] text-gray-400 text-lg" />
     </div>
   );
 }
 
-export default SearchBar
+export default SearchBar;

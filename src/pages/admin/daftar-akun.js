@@ -220,58 +220,196 @@ function DaftarAdmin() {
               </div>
             </div>
 
+            {filteredData.length === 0 && (
+              <p>Akun tidak ada</p>
+            )}
+            {filteredData.length > 0 && (
               <div className="w-full overflow-auto">
                 <table className="w-full">
                   <thead>
                     <tr>
-                      <th className="w-1/12 py-2 px-4 border-b border-black">#</th>
-                      <th className="w-1/12 py-2 px-4 border-b border-x border-black">Jam 1</th>
-                      <th className="w-1/12 py-2 px-4 border-b border-x border-black">Jam 2</th>
-                      <th className="w-1/12 py-2 px-4 border-b border-x border-black">Jam 3</th>
-                      <th className="w-1/12 py-2 px-4 border-b border-x border-black">Jam 4</th>
-                      <th className="w-1/12 py-2 px-4 border-b border-x border-black">Jam 5</th>
-                      <th className="w-1/12 py-2 px-4 border-b border-x border-black">Jam 6</th>
-                      <th className="w-1/12 py-2 px-4 border-b border-x border-black">Jam 7</th>
-                      <th className="w-1/12 py-2 px-4 border-b border-x border-black">Jam 8</th>
-                      <th className="w-1/12 py-2 px-4 border-b border-x border-black">Jam 9</th>
+                      <th className="w-1/12 py-2 px-4 border-b border-black">User</th>
+                      <th className="w-5/12 py-2 px-4 border-b border-x border-black">Nama</th>
+                      <th className="w-3/12 py-2 px-4 border-b border-x border-black">Status</th>
+                      <th className="w-3/12 py-2 px-4 border-b border-black text-center">#</th>
                     </tr>
                   </thead>
                   <tbody>
-                      <tr>
-                        <td className="py-2 px-4 border-black">
-                            <button className="cursor-pointer p-2 bg-gray-500">-</button>
-                        </td>
-                        <td className="py-2 px-4 border-black">
-                            <button className="cursor-pointer p-2 bg-gray-500">-</button>
-                        </td>
-                        <td className="py-2 px-4 border-black">
-                            <button className="cursor-pointer p-2 bg-gray-500">-</button>
-                        </td>
-                        <td className="py-2 px-4 border-black">
-                            <button className="cursor-pointer p-2 bg-gray-500">-</button>
-                        </td>
-                        <td className="py-2 px-4 border-black">
-                            <button className="cursor-pointer p-2 bg-gray-500">-</button>
-                        </td>
-                        <td className="py-2 px-4 border-black">
-                            <button className="cursor-pointer p-2 bg-gray-500">-</button>
-                        </td>
-                        <td className="py-2 px-4 border-black">
-                            <button className="cursor-pointer p-2 bg-gray-500">-</button>
-                        </td>
-                        <td className="py-2 px-4 border-black">
-                            <button className="cursor-pointer p-2 bg-gray-500">-</button>
-                        </td>
-                        <td className="py-2 px-4 border-black">
-                            <button className="cursor-pointer p-2 bg-gray-500">-</button>
-                        </td>
-                        <td className="py-2 px-4 border-black">
-                            <button className="cursor-pointer p-2 bg-gray-500">-</button>
+                    {filteredData.map((data, index) => (
+                      <tr key={index}>
+                        <td className="py-2 px-4 border-black">{data.username}</td>
+                        <td className="py-2 px-4 border-x border-black">{data.nama}</td>
+                        <td className="py-2 px-4 border-x border-black text-capitalize">{data.status}</td>
+                        <td className="py-2 px-4 border-black text-center flex items-center justify-center gap-2">
+                          <button
+                            className="bg-blue-500 text-white p-2 rounded"
+                            onClick={() => handleShowDetail(data.id)}
+                          >
+                            <FiAlignJustify />
+                          </button>
+                          <button
+                            className="bg-red-500 text-white p-2 rounded"
+                            onClick={() => handleDeleteAccount(data.id)}
+                          >
+                            <FaTrashCan />
+                          </button>
                         </td>
                       </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
+            )}
+
+            {showCreateTable && (
+              <Modal show={showCreateTable} onHide={() => setShowCreateTable(false)} centered>
+                <Modal.Header closeButton>
+                  <Modal.Title>Buat Akun Baru</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form onSubmit={handleCreateAccount}>
+                    <div className="mb-3">
+                      <label>Username</label>
+                      <input
+                        type="text"
+                        name="username"
+                        value={newAccount.username}
+                        onChange={handleInputChange}
+                        className="border py-1 px-2 w-full rounded"
+                        required
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label>Nama</label>
+                      <input
+                        type="text"
+                        name="nama"
+                        value={newAccount.nama}
+                        onChange={handleInputChange}
+                        className="border py-1 px-2 w-full rounded"
+                        required
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label>Password</label>
+                      <input
+                        type="password"
+                        name="password"
+                        value={newAccount.password}
+                        onChange={handleInputChange}
+                        className="border py-1 px-2 w-full rounded"
+                        required
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="mb-2">Status</label>
+                      <Form.Group className="flex flex-col">
+                        <Form.Check
+                          inline
+                          label="Admin"
+                          type="radio"
+                          name="status"
+                          value="admin"
+                          checked={newAccount.status === 'admin'}
+                          onChange={handleInputChange}
+                          id="admin"
+                          required
+                        />
+                        <Form.Check
+                          inline
+                          label="Pengajar"
+                          type="radio"
+                          name="status"
+                          value="pengajar"
+                          checked={newAccount.status === 'pengajar'}
+                          onChange={handleInputChange}
+                          id="pengajar"
+                          required
+                        />
+                      </Form.Group>
+                      {statusError && <p className="text-red-500">{statusError}</p>}
+                    </div>
+                    <Button type="submit" className="bg-blue-500 text-white">
+                      Buat Akun
+                    </Button>
+                  </Form>
+                </Modal.Body>
+              </Modal>
+            )}
+
+            {showEdit && editData && (
+              <Modal show={showEdit} onHide={() => setShowEdit(false)} centered>
+                <Modal.Header closeButton>
+                  <Modal.Title>Edit Akun</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form onSubmit={handleSaveChanges}>
+                    <div className="mb-3">
+                      <label>Username</label>
+                      <input
+                        type="text"
+                        name="username"
+                        value={editData.username || ''}
+                        onChange={handleEditInputChange}
+                        className="border py-1 px-2 w-full rounded"
+                        required
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label>Nama</label>
+                      <input
+                        type="text"
+                        name="nama"
+                        value={editData.nama || ''}
+                        onChange={handleEditInputChange}
+                        className="border py-1 px-2 w-full rounded"
+                        required
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label>Password</label>
+                      <input
+                        type="password"
+                        name="password"
+                        value={editData.password || ''}
+                        onChange={handleEditInputChange}
+                        className="border py-1 px-2 w-full rounded"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="mb-2">Status</label>
+                      <Form.Group className="flex flex-col">
+                        <Form.Check
+                          inline
+                          label="Admin"
+                          type="radio"
+                          name="status"
+                          value="admin"
+                          checked={editData.status === 'admin'}
+                          onChange={handleEditInputChange}
+                          id="admin-edit"
+                          required
+                        />
+                        <Form.Check
+                          inline
+                          label="Pengajar"
+                          type="radio"
+                          name="status"
+                          value="pengajar"
+                          checked={editData.status === 'pengajar'}
+                          onChange={handleEditInputChange}
+                          id="pengajar-edit"
+                          required
+                        />
+                      </Form.Group>
+                    </div>
+                    <Button type="submit" className="bg-blue-500 text-white">
+                      Simpan Perubahan
+                    </Button>
+                  </Form>
+                </Modal.Body>
+              </Modal>
+            )}
 
             {showDetail && dataDetail && (
               <Modal show={showDetail} onHide={() => setShowDetail(false)} centered>
