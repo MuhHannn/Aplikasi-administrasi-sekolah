@@ -37,20 +37,6 @@ function DaftarPengajar() {
     fetch(`/api/get-data-pengajar`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.data) {
-          setShowAllData(data.data);
-          setFilteredData(data.data);
-        }
-      })
-      .catch((err) => {
-        console.log("Error:", err.message);
-      });
-  }, []);
-
-  useEffect(() => {
-    fetch(`/api/get-data-pengajar`)
-      .then((res) => res.json())
-      .then((data) => {
         console.log('Data fetched for all accounts:', data);
         if (data.data) {
           setShowAllData(data.data);
