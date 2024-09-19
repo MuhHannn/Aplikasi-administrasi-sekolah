@@ -3,13 +3,13 @@ require("dotenv").config({ path: ".env.development.local" });
 const { sql } = require("@vercel/postgres");
 
 async function createMapelTable() {
-  const deleteTable = await sql`DROP TABLE IF EXISTS mapel_al_barokah`;
+  const deleteTable = await sql`DROP TABLE IF EXISTS tapel_al_abrokah`;
 
   const createTable = await sql`
-    CREATE TABLE IF NOT EXISTS mapel_al_barokah (
+    CREATE TABLE IF NOT EXISTS tapel_al_barokah (
         id SERIAL PRIMARY KEY,
-        kode VARCHAR(3) NOT NULL,
-        mapel VARCHAR(30) NOT NULL
+        tapel VARCHAR(30) NOT NULL,
+        status_aktif BOOLEAN DEFAULT TRUE
     );
   `;
   console.log(createTable);

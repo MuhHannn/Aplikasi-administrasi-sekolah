@@ -14,10 +14,12 @@ async function execute() {
         jam VARCHAR(10) NOT NULL,
         kelas INTEGER NOT NULL,
         mapel INTEGER NOT NULL,
+        tapel INTEGER NOT NULL,
         pengajar INTEGER NOT NULL,
-        FOREIGN KEY (kelas_id) REFERENCES kelas_al_barokah(id),
-        FOREIGN KEY (mapel_id) REFERENCES mapel_al_barokah(id),
-        FOREIGN KEY (pengajar_id) REFERENCES pengajar_al_barokah(id)
+        FOREIGN KEY (kelas) REFERENCES kelas_al_barokah(id),
+        FOREIGN KEY (mapel) REFERENCES mapel_al_barokah(id),
+        FOREIGN KEY (tapel) REFERENCES tapel_al_barokah(id),
+        FOREIGN KEY (pengajar) REFERENCES pengajar_al_barokah(id)
     );
   `;
   console.log(createTable);

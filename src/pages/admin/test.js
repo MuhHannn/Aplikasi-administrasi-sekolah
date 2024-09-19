@@ -1,21 +1,23 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Form, Button, Modal, Pagination, Tabs, Tab } from "react-bootstrap";
+import { Form, Button, Modal, Pagination, Tabs ,Tab } from "react-bootstrap";
 import { FaTrashCan } from "react-icons/fa6";
 import { FiAlignJustify } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
-import SearchBar from "../components/SearchBar";
 import Sidebar from "../components/sidebar";
 import Navbar from "../components/navbar";
+import SearchBar from "../components/SearchBar";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 
-function DaftarMapel() {
+function DaftarPengajar() {
   const router = useRouter();
 
   const { idDetail } = router.query;
 
   const [showAllData, setShowAllData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [mapelOptions, setMapelOptions] = useState([]);
+  const [selectedMapel, setSelectedMapel] = useState("");
 
   const [editData, setEditData] = useState(null);
   const [dataDetail, setDataDetail] = useState(null);
@@ -36,20 +38,6 @@ function DaftarMapel() {
     fetch(`/api/get-data-mapel`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.data) {
-          setShowAllData(data.data);
-          setFilteredData(data.data);
-        }
-      })
-      .catch((err) => {
-        console.log("Error:", err.message);
-      });
-  }, []);
-
-  useEffect(() => {
-    fetch(`/api/get-data-mapel`)
-      .then((res) => res.json())
-      .then((data) => {
         console.log('Data fetched for all accounts:', data);
         if (data.data) {
           setShowAllData(data.data);
@@ -65,8 +53,40 @@ function DaftarMapel() {
       });
   }, []);
 
+  // Fetch semua opsi mapel
+  useEffect(() => {
+    fetch(`/api/get-data-mapel`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.data) {
+          setMapelOptions(data.data); 
+        }
+      })
+      .catch((err) => {
+        console.log("Error fetching mapel options:", err.message);
+      });
+  }, []);
 
-  // Sorting Data
+  // Fetch data pengajar sesuai mapel yang dipilih
+  useEffect(() => {
+    if (!selectedMapel) {
+      setFilteredData(showAllData);  // Jika tidak ada mapel yang dipilih, tampilkan semua data
+      return;
+    }
+    fetch(`/api/get-detail-makelpeng-by-name?mapel=${selectedMapel}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.data) {
+          setFilteredData(data.data);  // Set data yang terfilter berdasarkan mapel
+        } else {
+          setFilteredData([]);  // Jika tidak ada data
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching data:", err.message);
+      });
+  }, [selectedMapel, showAllData]);  // Update ketika selectedMapel berubah
+
   useEffect(() => {
     if (selectedSortColumn) {
       const sortedData = [...filteredData].sort((a, b) => {
@@ -275,54 +295,21 @@ function DaftarMapel() {
     setCurrentPage(page);
   };
 
-  useEffect(() => {
-    // Fetch mapel options from mapel_al_barokah table
-    fetch(`/api/get-data-mapel-al-barokah`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.data) {
-          setMapelOptions(data.data);
-        }
-      })
-      .catch((err) => {
-        console.log("Error fetching mapel options:", err.message);
-      });
-  }, []);
-
-  const [mapelOptions, setMapelOptions] = useState([]); // Stores mapel options from mapel_al_barokah
-  const [selectedMapel, setSelectedMapel] = useState(''); // Stores selected mapel id
-  const [makelpengData, setMakelpengData] = useState([]); // Stores data from mapel_kelas_pengajar based on selected mapel
-  const [filteredMakelPengData, setFilteredMakelpengData] = useState([]);
-
-  useEffect(() => {
-    if (selectedMapel) {
-      // Fetch pengajar data based on selected mapel
-      fetch(`/api/get-detail-mapel_kelas_pengajar?mapel=${selectedMapel}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.data) {
-            setMakelpengData(data.data);
-            setFilteredData(data.data); // Set initial filtered data
-          }
-        })
-        .catch((err) => {
-          console.log("Error fetching pengajar data:", err.message);
-        });
-    }
-  }, [selectedMapel]);
-
-  const handleMapelChange = (e) => {
-    setSelectedMapel(e.target.value); // Update selected mapel when user changes the select input
-  };
-
+  // Render
   return (
     <div className="bg-gray-100 flex h-screen">
       <Sidebar className="h-full overflow-hidden" />
       <div className="flex flex-col flex-1">
         <Navbar>Daftar Akun</Navbar>
-        <Tabs variant="tabs" justify>
-          <Tab eventKey="home" title="Home">
-            <main className="flex flex-col flex-1 overflow-auto">
+          
+        
+        <Tabs 
+      defaultActiveKey="profile"
+      id="uncontrolled-tab-example"
+      className="mb-3"
+    >
+      <Tab eventKey="home" title="Home">
+      <main className="flex flex-col flex-1 overflow-auto">
               <div className="flex flex-col rounded p-5 gap-4">
                 <div className="flex justify-between items-center">
                   <div className="w-8/12 p-0 m-0">
@@ -394,7 +381,7 @@ function DaftarMapel() {
                           {paginatedData.map((data, index) => (
                             <tr key={index}>
                               <td className="py-2 px-4 border-black">{data.kode}</td>
-                              <td className="py-2 px-4 border-x border-black">{data.mapel}</td>
+                              <td className="py-2 px-4 border-x border-black" >{data.mapel}</td>
                               <td className="py-2 px-4 border-black text-center flex items-center justify-center gap-2">
                                 <Button
                                   variant="primary"
@@ -549,52 +536,76 @@ function DaftarMapel() {
                 )}
               </div>
             </main>
-          </Tab>
-          
-          <Tab eventKey="profile" title="Profile">
-          <main className="flex flex-col flex-1 overflow-auto p-5">
-              <Form.Group className="mb-3">
-                <Form.Label>Select Mapel</Form.Label>
-                <Form.Control as="select" value={selectedMapel} onChange={handleMapelChange}>
-                  <option value="">Pilih Mapel</option>
-                  {mapelOptions.map((mapel) => (
-                    <option key={mapel.id} value={mapel.id}>
-                      {mapel.mapel}
-                    </option>
-                  ))}
-                </Form.Control>
-              </Form.Group>
+      </Tab>
+      <Tab eventKey="profile" title="Profile">
+      <main className="flex flex-col flex-1 overflow-auto">
+          <div className="flex flex-col rounded p-5 gap-4">
+            <div className="flex justify-between items-center">
+              <button
+                className="bg-blue-500 text-white rounded px-3 py-2"
+                onClick={() => setShowCreateTable(true)}
+              >
+                <IoMdAdd />
+              </button>
+            </div>
+            <div className="flex flex-col mt-2">
+              <select
+                value={selectedMapel}
+                onChange={(e) => setSelectedMapel(e.target.value)}  // Set mapel yang dipilih
+                className="border py-2 px-4 rounded"
+              >
+                <option value="">Pilih Mapel</option>
+                {mapelOptions.map((mapel) => (
+                  <option key={mapel.id} value={mapel.id}>
+                    {mapel.mapel}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-              {makelpengData.length === 0 ? (
-                <p>No data available for the selected mapel</p>
-              ) : (
-                <div className="mt-4">
-                  <table className="table">
+            {filteredData.length === 0 ? (
+              <p>Data tidak ada</p>
+            ) : (
+              <div className="flex flex-col gap-4">
+                <div className="w-full overflow-auto">
+                  <table className="w-full">
                     <thead>
                       <tr>
-                        <th>Kode</th>
-                        <th>Nama Pengajar</th>
-                        <th>Kelas</th>
+                        <th className="w-1/12 py-2 px-4 border-b border-black">Mapel</th>
+                        <th className="w-5/12 py-2 px-4 border-b border-x border-black">Kelas</th>
+                        <th className="w-3/12 py-2 px-4 border-b border-x border-black">No WA</th>
+                        <th className="w-3/12 py-2 px-4 border-b border-black text-center">#</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredMakelpengData.map((data) => (
-                        <tr key={data.id}>
-                          <td>{data.mapel}</td>
-                          <td>{data.kelas}</td>
-                          <td>{data.pengajar}</td>
+                      {filteredData.map((data, index) => (
+                        <tr key={index}>
+                          <td className="py-2 px-4 border-black">{data.mapel}</td>
+                          <td className="py-2 px-4 border-x border-black">{data.kelas}</td>
+                          <td className="py-2 px-4 border-x border-black text-capitalize">{data.nama}</td>
+                          <td className="py-2 px-4 border-black text-center flex items-center justify-center gap-2">
+                            <Button variant="primary">
+                              <FiAlignJustify />
+                            </Button>
+                            <Button variant="danger">
+                              <FaTrashCan />
+                            </Button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-              )}
-            </main>
-          </Tab>
-        </Tabs>
+                {/* Pagination */}
+              </div>
+            )}
+          </div>
+        </main>
+      </Tab>
+    </Tabs>
       </div>
     </div>
   );
 }
 
-export default DaftarMapel;
+export default DaftarPengajar;

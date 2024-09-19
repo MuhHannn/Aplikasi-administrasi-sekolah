@@ -1,42 +1,34 @@
-import { sql } from "@vercel/postgres";
-import bcrypt from 'bcrypt';
+import { sql } from '@vercel/postgres';
 
 export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    const { username,nama,  status, password } = req.body;
+  const { username, nama, status, password } = req.body;
 
-    if (!username || !nama || !status || !password) {
-      return res.status(400).json({ message: 'Semua data harus diisi' });
+  // Validasi: Username hanya boleh berisi angka dan panjang minimal 4 karakter
+  if (!/^\d+$/.test(username)) {
+    return res.status(400).json({ message: 'Username hanya boleh berisi angka' });
+  }
+
+  if (username.length < 4) {
+    return res.status(400).json({ message: 'Username harus memiliki panjang minimal 4 karakter' });
+  }
+
+  try {
+    // Cek apakah username sudah digunakan
+    const existingUser = await sql`SELECT * FROM akun_al_barokah WHERE username = ${username}`;
+
+    if (existingUser.rowCount > 0) {
+      return res.status(400).json({ message: 'Username sudah terdaftar, harap gunakan username lain' });
     }
 
-    // Validasi status
-    if (status !== 'admin' && status !== 'pengajar') {
-      return res.status(400).json({ message: 'Status tidak valid' });
-    }
-
-    try {
-      // Hash password
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const shortenedHash = hashedPassword.substring(0, 12);  
-
-      // Insert data ke database
-      const result = await sql`
-        INSERT INTO akun_al_barokah (username, nama, password, status)
-        VALUES (${username}, ${nama}, ${shortenedHash}, ${status})
-        RETURNING *;
-      `;
-
-      // Pastikan data yang dikembalikan ada
-      if (result.rowCount === 0) {
-        return res.status(500).json({ message: 'Gagal menyimpan data' });
-      }
-
-      res.status(201).json({ data: result.rows[0] });
-    } catch (err) {
-      console.error('Error creating account:', err);
-      res.status(500).json({ message: 'Terjadi kesalahan pada server' });
-    }
-  } else {
-    res.status(405).json({ message: 'Method not allowed' });
+    // Proses pembuatan akun
+    const newUser = await sql`
+      INSERT INTO akun_al_barokah (username, nama, status, password)
+      VALUES (${username}, ${nama}, ${status}, ${password})
+      RETURNING *;
+    `;
+    res.status(200).json({ data: newUser.rows[0] });
+  } catch (error) {
+    console.log('Error inserting data:', error);
+    res.status(500).json({ message: 'Terjadi kesalahan saat membuat akun' });
   }
 }

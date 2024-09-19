@@ -1,31 +1,46 @@
-import { useState } from "react";
-import { FaSearch } from "react-icons/fa";
+import { useState } from 'react';
+import { FaSearch } from 'react-icons/fa';
 
-function SearchBar({ children, data, onSearch }) {
-  const [searchQuery, setSearchQuery] = useState("");
+function SearchBar({ data, onSearch, searchByOptions }) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchBy, setSearchBy] = useState(searchByOptions[0]);
 
   const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-    if (e.target.value === "") {
-      onSearch(data);
-    } else {
-      const filtered = data.filter((item) =>
-        item.username.toLowerCase().includes(e.target.value.toLowerCase())
-      );
-      onSearch(filtered);
-    }
+    setSearchTerm(e.target.value);
+    const filteredData = data.filter(item =>
+      item[searchBy].toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    onSearch(filteredData);
+  };
+
+  const handleSearchByChange = (e) => {
+    setSearchBy(e.target.value);
   };
 
   return (
-    <div className="flex">
-      <input
-        type="text"
-        className="py-2 px-3 border rounded-full w-full"
-        placeholder={children}
-        value={searchQuery}
-        onChange={handleSearch}
-      />
-      <FaSearch className="absolute right-[415px] top-[138px] text-gray-400 text-lg" />
+    <div className="search-bar flex items-center rounded border border-black">
+      <select 
+        value={searchBy} 
+        onChange={handleSearchByChange} 
+        className="border-l p-2 bg-white"
+      >
+        {searchByOptions.map((option, index) => (
+          <option key={index} value={option}>
+            {option.replace(/[_-]/g, ' ').charAt(0).toUpperCase() + option.replace(/[_-]/g, ' ').slice(1)}
+          </option>
+        ))}
+      </select>
+
+      <div className="relative w-full border-l-2 border-gray-200">
+        <input 
+          type="text"
+          placeholder={`Search by ${searchBy.replace(/[_-]/g, ' ')}`}
+          value={searchTerm}
+          onChange={handleSearch}
+          className="pr-10 p-2 outline-none w-full"
+        />
+        <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+      </div>
     </div>
   );
 }

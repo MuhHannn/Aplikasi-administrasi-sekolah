@@ -4,6 +4,7 @@ import { Button, Modal, Form } from 'react-bootstrap';
 import { parseCookies, setCookie } from 'nookies';
 import Navbar from "./components/navbar";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Sidebar from './components/sidebar';
 
 const AccountPage = () => {
     const cookies = parseCookies();
@@ -63,10 +64,13 @@ const AccountPage = () => {
     };
 
     return (
-        <div className='bg-gray-100 flex flex-col min-h-screen items-center'>
-            <Navbar />
+<div className='flex flex-1 w-full'>
+        <Sidebar />
 
-            <div className='flex flex-col flex-1 w-5/12 bg-white shadow-lg rounded p-5 m-5 gap-5'>
+        <div className='bg-gray-100 flex flex-col min-h-screen items-center justify-center w-full py-32'>
+            
+
+            <div className='flex flex-col flex-1 bg-white shadow-lg rounded p-10'>
                 <div className='text-center'>
                     <h1>Akun Anda</h1>
                 </div>
@@ -156,6 +160,7 @@ const AccountPage = () => {
                 </Modal>
             )}
         </div>
+</div>
     );
 };
 

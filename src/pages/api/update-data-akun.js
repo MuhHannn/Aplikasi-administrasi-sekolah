@@ -1,36 +1,36 @@
+// Misalkan kita menggunakan PostgreSQL
 import { sql } from '@vercel/postgres';
 
 export default async function handler(req, res) {
-    if (req.method !== "PUT") {
-        return res.status(405).json({ error: "Method not allowed" });
+  const { id, username, nama, status, password } = req.body;
+
+  // Validasi: Username harus hanya berisi angka dan minimal 4 karakter
+  if (!/^\d+$/.test(username)) {
+    return res.status(400).json({ message: 'Username hanya boleh berisi angka' });
+  }
+
+  if (username.length < 4) {
+    return res.status(400).json({ message: 'Username harus memiliki panjang minimal 4 karakter' });
+  }
+
+  try {
+    // Cek apakah username sudah digunakan oleh akun lain
+    const existingUser = await sql`SELECT * FROM akun WHERE username = ${username}`;
+
+    if (existingUser.rowCount > 0) {
+      return res.status(400).json({ message: 'Username sudah terdaftar, harap gunakan username lain' });
     }
 
-    const { id, username, nama, status, password } = req.body;
-
-    if (!id || !username || !status) {
-        return res.status(400).json({ error: 'ID, Username, and Status are required' });
-    }
-
-    try {
-        // Use the utility function to hash and trim the password
-
-        const result = await sql`
-            UPDATE akun_al_barokah
-            SET 
-                username = ${username},
-                nama = ${nama},
-                status = ${status},
-                password = ${password}
-            WHERE id = ${id}
-        `;
-
-        console.log(result)
-        if (result) {
-            res.json({ success: true, data: result });
-          } else {
-            res.json({ success: false, message: 'Gagal memperbarui data' });
-          }
-    } catch (error) {
-        res.status(500).json({ error: 'Error updating account: ' + error.message });
-    }
+    // Proses update akun
+    const updatedUser = await sql`
+      UPDATE akun 
+      SET username = ${username}, nama = ${nama}, status = ${status}, password = ${password}
+      WHERE id = ${id}
+      RETURNING *;
+    `;
+    res.status(200).json({ data: updatedUser.rows[0] });
+  } catch (error) {
+    console.log('Error updating data:', error);
+    res.status(500).json({ message: 'Terjadi kesalahan saat mengedit akun' });
+  }
 }

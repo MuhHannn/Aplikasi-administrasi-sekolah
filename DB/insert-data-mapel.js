@@ -2,12 +2,12 @@ require("dotenv").config({ path: ".env.development.local" });
 
 const { sql } = require("@vercel/postgres");
 
-async function execute( mapel, pengajar, kelas) {
+async function execute( kode, mapel) {
   const result = await sql`
-        INSERT INTO mapel_al_barokah (mapel, pengajar, kelas)
-        VALUES (${mapel}, ${pengajar}, ${kelas})
+        INSERT INTO mapel_al_barokah (kode, mapel)
+        VALUES (${kode}, ${mapel})
         `;
   console.log(result);
 }
 
-execute("Bahasa Arab", 2, 1);
+execute("Bahasa Arab");
