@@ -1,21 +1,27 @@
 import { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 
-function SearchBar({ data, onSearch, searchByOptions }) {
+function SearchBar({ data = [], onSearch, searchByOptions = [] }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchBy, setSearchBy] = useState(searchByOptions[0]);
+  const [searchBy, setSearchBy] = useState(searchByOptions[0] || ''); // Add fallback
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    const filteredData = data.filter(item =>
-      item[searchBy].toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    onSearch(filteredData);
+    if (searchBy) {
+      const filteredData = data.filter(item =>
+        item[searchBy]?.toLowerCase().includes(e.target.value.toLowerCase()) // Optional chaining
+      );
+      onSearch(filteredData);
+    }
   };
 
   const handleSearchByChange = (e) => {
     setSearchBy(e.target.value);
   };
+
+  if (searchByOptions.length === 0) {
+    return <div>No search options available</div>;
+  }
 
   return (
     <div className="search-bar flex items-center rounded border border-black">
